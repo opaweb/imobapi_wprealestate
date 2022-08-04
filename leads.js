@@ -8,11 +8,8 @@ jQuery(document).ready(function( $ ) {
         var tags = $('input[name="tags"]').val();
         var source = $('input[name="source"]').val();
         var subject = $('input[name="subject"]').val();
-        var property_code = $('input[name="property_code"]').val();
-        var property_contract = $('input[name="property_contract"]').val();
-
-
-
+        var property_code = $('.property-detail-detail ul.list li:first-child div.value').text();
+        var property_contract = $('.property-detail-detail div:contains("Status")').next().text();
 
         var url = 'https://' + document.location.hostname + '/wp-content/plugins/imobapi_wprealestate/leads.php';
 

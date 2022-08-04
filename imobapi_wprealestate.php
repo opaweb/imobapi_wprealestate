@@ -182,12 +182,12 @@ add_action( 'rest_api_init', function() {
         '_property_map_location_longitude', 
         '_property_virtual_tour', 
         '_property_posted_by',
-		'_property_condominio_nome',
         '_images', 
         '_floor_plans',        
         'suites', 
         'area-util',
         'area-total',
+		'condominio_nome',
     ];
     
     foreach($propertyFields as $propertyField){
