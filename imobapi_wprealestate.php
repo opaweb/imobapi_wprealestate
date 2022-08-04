@@ -1,7 +1,7 @@
 <?php 
 /**
  * Plugin Name: ImobAPI - WP Real Estate
- * Version: 1.0.0
+ * Version: 1.0.1
  * Description: Plugin para funcionalidade adicional de sincronização de imóveis através da ImobAPI.
  * Author: ImobAPI
  * Author URI: https://imobapi.com.br
@@ -16,6 +16,9 @@
  * CHANGELOG
  * 
  * 1.0.0 - Reslease inicial.
+ * 
+ * 1.0.1 - Adicionada página de configuração para salvar chave de API - necessária para envio de Leads.
+ * 
  * 
  */
 
@@ -263,4 +266,95 @@ add_action( 'rest_api_init', function () {
     ) );
   } );
 
-  wp_enqueue_script('imobapi_wprealestate_leads', plugin_dir_url(__FILE__) . 'leads.js', array('jquery'), false, true);
+wp_enqueue_script('imobapi_wprealestate_leads', plugin_dir_url(__FILE__) . 'leads.js', array('jquery'), false, true);
+
+
+
+
+function imobapi_settings() {
+	register_setting(
+		'group_imobapi',
+		'imobapi_key',
+		array(
+			/*'sanitize_callback' => function( $value ) {
+				if ( ! preg_match( '/API-[0-9]{4}-[A-Z]{3}/', $value ) ) {
+					add_settings_error(
+						'imobapi_key',
+						esc_attr( 'imobapi_key_error' ),
+						'Chave API no formato errado.',
+						'error'
+					);
+					return get_option( 'imobapi_key' );
+				}
+				return $value;
+			},*/
+		)
+	);
+ 
+	add_settings_section(
+		'imobapi_config_section',
+		'Minha seção',
+		function( $args ) {
+			echo '<p>Coloque aqui a sua chave API.</p>';
+		},
+		'group_imobapi'
+	);
+ 
+	add_settings_field(
+		'imobapi_key',
+		'Token API de Integração',
+		function( $args ) {
+			$options = get_option( 'imobapi_key' );
+			?>
+			<input
+				type="text"
+				id="<?php echo esc_attr( $args['label_for'] ); ?>"
+				name="imobapi_key"
+				value="<?php echo esc_attr( $options ); ?>">
+			<?php
+		},
+		'group_imobapi',
+		'imobapi_config_section',
+		[
+			'label_for' => 'imobapi_key_html_id',
+			'class'     => 'classe-html-tr',
+		]
+	);
+}
+add_action( 'admin_init', 'imobapi_settings' );
+ 
+function imobapi_menu() {
+	add_options_page(
+		'Configuração ImobAPI', // Título da página
+		'ImobAPI', // Nome no menu do Painel
+		'manage_options', // Permissões necessárias
+		'imobapi', // Valor do parâmetro "page" no URL
+		'imobapi_html' // Função que imprime o conteúdo da página
+	);
+}
+
+add_action( 'admin_menu', 'imobapi_menu' );
+ 
+function imobapi_html() {
+	?>
+	<div class="wrap">
+		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+		<form action="options.php" method="post">
+			<?php
+			settings_fields( 'group_imobapi' );
+			do_settings_sections( 'group_imobapi' );
+			submit_button();
+			?>
+		</form>
+	</div>
+	<?php
+}
+
+
+function imobapi_settings_link_lista_plugins( $links ) {
+	$settings_link = '<a href="options-general.php?page=imobapi">Configurações</a>';
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+$plugin = plugin_basename( __FILE__ );
+add_filter( "plugin_action_links_$plugin", 'imobapi_settings_link_lista_plugins' );

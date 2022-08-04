@@ -3,7 +3,28 @@ define('WP_USE_THEMES', false);
 (string)$caminho = dirname(__FILE__);
 require_once( $caminho.'/../../../wp-blog-header.php' );
 
-var_dump($_REQUEST);
+$remote_url = 'https://app.imobapi.com.br/api/lead';
+$id_token = 'q0SYEMWIxZh0WJ6jM2vumKOUcR99omhZeCXBYMPn'; 
+$body = array(
+    'full_name' => $_REQUEST['full_name'],
+    'email' => $_REQUEST['email'],
+    'phone' => $_REQUEST['phone'],
+    'message' => $_REQUEST['message'],
+    'tags' => $_REQUEST['tags'],
+    'source' => $_REQUEST['source'],
+    'subject' => $_REQUEST['subject'],
+    'property_code' => $_REQUEST['property_code'],
+    'property_contract' => $_REQUEST['property_contract'],
+);
+$args = array(
+    'headers'     => array(
+        'Authorization' => 'Bearer ' . $id_token,
+    ),
+    'body' => $body,
+); 
+$imobapi = wp_remote_post( $remote_url, $args );
+
+var_dump($imobapi);
 
 
 ?>
