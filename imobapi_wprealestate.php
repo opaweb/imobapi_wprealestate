@@ -262,3 +262,5 @@ add_action( 'rest_api_init', function () {
       ),
     ) );
   } );
+
+  wp_enqueue_script('imobapi_wprealestate_leads', plugin_dir_url(__FILE__) . 'leads.js', array('jquery'), false, true);
