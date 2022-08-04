@@ -293,7 +293,7 @@ function imobapi_settings() {
  
 	add_settings_section(
 		'imobapi_config_section',
-		'Minha seção',
+		'Configuração',
 		function( $args ) {
 			echo '<p>Coloque aqui a sua chave API.</p>';
 		},
