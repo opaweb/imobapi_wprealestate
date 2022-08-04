@@ -4,8 +4,7 @@ jQuery(document).ready(function( $ ) {
         var full_name = $('input[name="name"]').val();
         var email = $('input[name="email"]').val();
         var phone = $('input[name="phone"]').val();
-        var message = $('textarea.message').val();
-
+        var message = $('textarea[name="message"]').val();
         var tags = $('input[name="tags"]').val();
         var source = $('input[name="source"]').val();
         var subject = $('input[name="subject"]').val();
