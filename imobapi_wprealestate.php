@@ -1,7 +1,7 @@
 <?php 
 /**
  * Plugin Name: ImobAPI - WP Real Estate
- * Version: 1.0.1
+ * Version: 1.0.2
  * Description: Plugin para funcionalidade adicional de sincronização de imóveis através da ImobAPI.
  * Author: ImobAPI
  * Author URI: https://imobapi.com.br
@@ -19,7 +19,7 @@
  * 
  * 1.0.1 - Adicionada página de configuração para salvar chave de API - necessária para envio de Leads. Adicionado campo de cadastro "condominio_nome".
  * 
- * 
+ * 1.0.2 - Adicionado botão para recarregar mídia incompleta de imóvel.
  */
 
 require_once dirname( __FILE__ ) . '/class-tgm-plugin-activation.php';
@@ -187,7 +187,7 @@ add_action( 'rest_api_init', function() {
         'suites', 
         'area-util',
         'area-total',
-		'condominio_nome',
+		'condominio-nome',
     ];
     
     foreach($propertyFields as $propertyField){
@@ -359,3 +359,28 @@ function imobapi_settings_link_lista_plugins( $links ) {
 }
 $plugin = plugin_basename( __FILE__ );
 add_filter( "plugin_action_links_$plugin", 'imobapi_settings_link_lista_plugins' );
+
+add_filter('manage_property_posts_columns', 'imobapi_filter_posts_columns');
+
+function imobapi_filter_posts_columns($columns){
+  $columns['media'] = __('Mídia');
+  return $columns;
+}
+
+add_action( 'manage_property_posts_custom_column', 'imobapi_property_column', 10, 2);
+function imobapi_property_column( $column, $post_id ) {
+  // Media column
+  if ( 'media' === $column ) {
+    echo '<button class="reloadMedia">Recarregar mídia</button>';
+    echo '<script>
+
+    	jQuery(".reloadMedia").click(function() {
+			jQuery.get("/wp-content/plugins/imobapi_wprealestate/run.php?post_id='.$post_id.'", function() {
+              location.reload();
+            });
+
+    	});
+    </script>';
+  }
+}
+?>
