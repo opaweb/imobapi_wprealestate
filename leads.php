@@ -27,6 +27,7 @@ $body = array(
     'subject' => $_REQUEST['subject'],
     'property_code' => $_REQUEST['property_code'],
     'property_contract' => $contract,
+    'client' => $_SERVER['SERVER_NAME'],
 );
 $args = array(
     'headers'     => array(
